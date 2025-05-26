@@ -22,9 +22,15 @@ Route::get('/test', function () {
     return response()->json(['ok' => true]);
 })->middleware(AuthApiMiddleware::class);
 
-Route::middleware(['auth.api', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index']);
+Route::middleware(['auth.api', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index']);
+
+    Route::apiResource('departments', \App\Http\Controllers\Api\DepartmentController::class);
+    Route::apiResource('disciplines', \App\Http\Controllers\Api\DisciplineController::class);
+    Route::apiResource('groups', \App\Http\Controllers\Api\GroupController::class);
+    Route::apiResource('teachers', \App\Http\Controllers\Api\TeacherController::class);
 });
+
 
 Route::middleware(['auth.api', 'role:methodist'])->group(function () {
     Route::get('/methodist/reports', [MethodistController::class, 'reports']);
