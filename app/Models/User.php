@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
+    
     use Notifiable;
 
     /**
@@ -53,5 +54,15 @@ class User extends Authenticatable
         $this->save();
 
         return $this->api_token;
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->roles()->where('name', $roleName)->exists();
     }
 }
