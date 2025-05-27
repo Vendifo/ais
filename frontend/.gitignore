@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Директория сборки (если есть)
+dist/
+build/
+
+# Файлы окружения
+.env
+.env.local
+.env.*.local
+
+# Кеши редакторов и ОС
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Конфигурации и прочее
+*.local
