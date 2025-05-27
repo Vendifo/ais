@@ -16,18 +16,15 @@ use App\Http\Controllers\ReportController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-// Тестовые маршруты для авторизованных пользователей
 Route::middleware('auth.api')->get('/user', function (Request $request) {
-    return response()->json($request->user());
+    $user = $request->user()->load('roles'); // Загружаем роли
+
+    return response()->json([
+        'user' => $user,
+        'roles' => $user->roles->pluck('name'), // список ролей в виде массива строк
+    ]);
 });
 
-Route::middleware('auth.api')->get('test', function () {
-    return response()->json(['status' => 'OK']);
-});
-
-Route::get('/test', function () {
-    return response()->json(['ok' => true]);
-})->middleware(AuthApiMiddleware::class);
 
 // 👑 Админка
 Route::middleware(['auth.api', 'role:admin'])->prefix('admin')->group(function () {
