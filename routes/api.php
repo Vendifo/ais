@@ -37,7 +37,12 @@ Route::middleware(['auth.api', 'role:admin'])->prefix('admin')->group(function (
     Route::apiResource('disciplines', \App\Http\Controllers\Api\DisciplineController::class);
     Route::apiResource('groups', \App\Http\Controllers\Api\GroupController::class);
     Route::apiResource('teachers', \App\Http\Controllers\Api\TeacherController::class);
+
+    // Добавляем пользователей и роли
+    Route::apiResource('users', \App\Http\Controllers\Api\UserController::class);
+    Route::apiResource('roles', \App\Http\Controllers\Api\RoleController::class);
 });
+
 
 // 🧾 Методист
 Route::middleware(['auth.api', 'role:methodist'])->group(function () {
