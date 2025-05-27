@@ -12,7 +12,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
+            DepartmentSeeder::class,   // если есть
+            DisciplineSeeder::class,   // если есть
+            GroupSeeder::class,        // если есть
+            PlannedLoadSeeder::class,
+            ActualLoadSeeder::class,
         ]);
     }
-
 }
