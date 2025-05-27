@@ -10,11 +10,14 @@ class GroupSeeder extends Seeder
 {
     public function run()
     {
-        $department = Department::where('name', 'Кафедра информатики')->first();
+        Group::truncate();
 
-        Group::insert([
-            ['name' => 'ПИ-21', 'department_id' => $department->id, 'year' => 2021],
-            ['name' => 'ПИ-22', 'department_id' => $department->id, 'year' => 2022],
-        ]);
+        if (Department::count() === 0) {
+            $this->command->error('Нет кафедр в базе. Запустите DepartmentSeeder!');
+            return;
+        }
+
+        // Создаём 20 групп, каждая с рандомной кафедрой из базы
+        Group::factory()->count(20)->create();
     }
 }

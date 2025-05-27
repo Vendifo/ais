@@ -9,15 +9,14 @@ class DepartmentSeeder extends Seeder
 {
     public function run()
     {
-        $departments = [
-            ['name' => 'Кафедра информатики'],
-            ['name' => 'Кафедра математики'],
-            ['name' => 'Кафедра физики'],
-            ['name' => 'Кафедра иностранных языков'],
-        ];
+        Department::truncate();
 
-        foreach ($departments as $department) {
-            Department::updateOrCreate(['name' => $department['name']], $department);
-        }
+        // Создаём фиксированные кафедры через фабрику с состояниями
+        Department::factory()->informatics()->create();
+        Department::factory()->mathematics()->create();
+        Department::factory()->physics()->create();
+
+        // А затем 17 случайных кафедр (чтобы в итоге было 20)
+        Department::factory()->count(17)->create();
     }
 }

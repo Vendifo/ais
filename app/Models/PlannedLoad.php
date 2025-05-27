@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PlannedLoad extends Model
 {
-
+    use HasFactory;
     protected $fillable = [
         'teacher_id', 'discipline_id', 'group_id',
         'type', 'hours', 'semester', 'year', 'created_by'

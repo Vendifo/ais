@@ -10,14 +10,19 @@ class DisciplineSeeder extends Seeder
 {
     public function run()
     {
-        $mathDept = Department::where('name', 'Кафедра математики')->first();
-        $physDept = Department::where('name', 'Кафедра физики')->first();
-        $csDept = Department::where('name', 'Кафедра информатики')->first();
+        Discipline::truncate();
 
-        Discipline::insert([
-            ['name' => 'Математика', 'department_id' => $mathDept->id],
-            ['name' => 'Физика', 'department_id' => $physDept->id],
-            ['name' => 'Информатика', 'department_id' => $csDept->id],
-        ]);
+        if (Department::count() === 0) {
+            $this->command->error('Нет кафедр! Запустите сначала DepartmentSeeder.');
+            return;
+        }
+
+        // Создаём фиксированные дисциплины через фабрику с нужными состояниями
+        Discipline::factory()->math()->create(['name' => 'Математика']);
+        Discipline::factory()->physics()->create(['name' => 'Физика']);
+        Discipline::factory()->cs()->create(['name' => 'Информатика']);
+
+        // А затем ещё 20 рандомных
+        Discipline::factory()->count(20)->create();
     }
 }
