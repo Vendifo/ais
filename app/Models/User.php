@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    
+
     use Notifiable;
 
     /**
@@ -65,4 +65,10 @@ class User extends Authenticatable
     {
         return $this->roles()->where('name', $roleName)->exists();
     }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
 }

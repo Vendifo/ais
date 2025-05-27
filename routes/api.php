@@ -10,12 +10,13 @@ use App\Http\Middleware\AuthApiMiddleware;
 use App\Http\Controllers\PlannedLoadController;
 use App\Http\Controllers\ActualLoadController;
 use App\Http\Controllers\LoadComparisonController;
+use App\Http\Controllers\ReportController;
 
 // 🔐 Аутентификация
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-// 🧪 Тестовые маршруты
+// Тестовые маршруты для авторизованных пользователей
 Route::middleware('auth.api')->get('/user', function (Request $request) {
     return response()->json($request->user());
 });
@@ -42,7 +43,6 @@ Route::middleware(['auth.api', 'role:admin'])->prefix('admin')->group(function (
 Route::middleware(['auth.api', 'role:methodist'])->group(function () {
     Route::get('/methodist/reports', [MethodistController::class, 'reports']);
 
-    // Плановая нагрузка
     Route::prefix('loads')->group(function () {
         Route::apiResource('planned', PlannedLoadController::class);
     });
@@ -52,11 +52,23 @@ Route::middleware(['auth.api', 'role:methodist'])->group(function () {
 Route::middleware(['auth.api', 'role:teacher'])->group(function () {
     Route::get('/teacher/load', [TeacherController::class, 'load']);
 
-    // Фактическая нагрузка
     Route::prefix('loads')->group(function () {
         Route::apiResource('actual', ActualLoadController::class);
     });
 });
 
-// 📊 Сравнение нагрузки доступно всем авторизованным
-Route::middleware('auth.api')->get('/loads/compare', [LoadComparisonController::class, 'index']);
+// 📊 Сравнение и отчёты — доступны всем авторизованным пользователям
+Route::middleware('auth.api')->group(function () {
+    Route::get('/loads/compare', [LoadComparisonController::class, 'index']);
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/workloads/teachers', [ReportController::class, 'workloadComparison']);
+        Route::get('/workloads/disciplines', [ReportController::class, 'workloadByDiscipline']);
+        Route::get('/workloads/departments', [ReportController::class, 'workloadByDepartment']);
+        Route::get('/workloads/types', [ReportController::class, 'workloadByType']);
+
+        // Заготовки на будущее
+        // Route::get('/export/pdf', [ReportController::class, 'exportPdf']);
+        // Route::get('/export/excel', [ReportController::class, 'exportExcel']);
+    });
+});

@@ -14,6 +14,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('api_token', 80)->nullable()->unique();
+
+            $table->foreignId('department_id')->nullable()->constrained()->onDelete('set null');
+
             $table->timestamps();
         });
     }
