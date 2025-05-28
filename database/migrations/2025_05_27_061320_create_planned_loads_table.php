@@ -15,6 +15,9 @@ return new class extends Migration {
             $table->foreignId('teacher_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('discipline_id')->constrained()->cascadeOnDelete();
             $table->foreignId('group_id')->constrained()->cascadeOnDelete();
+
+            $table->foreignId('department_id')->constrained()->cascadeOnDelete(); // <-- добавили кафедру
+
             $table->string('type');
             $table->integer('hours');
             $table->string('semester');
@@ -23,7 +26,6 @@ return new class extends Migration {
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

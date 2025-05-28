@@ -24,11 +24,13 @@ class PlannedLoadFactory extends Factory
             'teacher_id' => $teacher?->id,
             'discipline_id' => $discipline?->id,
             'group_id' => $group?->id,
+            'department_id' => $teacher?->department_id,  // <--- добавь сюда
             'type' => $this->faker->randomElement(['лекция', 'практика', 'лабораторная']),
             'hours' => $this->faker->numberBetween(10, 50),
             'semester' => $this->faker->randomElement(['Весна', 'Осень']),
             'year' => $this->faker->year(),
             'created_by' => $teacher?->id,
         ];
+        
     }
 }

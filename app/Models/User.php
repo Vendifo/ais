@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'api_token',
+        'department_id'
     ];
 
     /**
@@ -64,6 +65,11 @@ class User extends Authenticatable
     public function hasRole($roleName)
     {
         return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function hasAnyRole(array $roles): bool
+    {
+        return $this->roles()->whereIn('name', $roles)->exists();
     }
 
     public function department()

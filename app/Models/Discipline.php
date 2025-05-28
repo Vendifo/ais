@@ -20,4 +20,10 @@ class Discipline extends Model
     {
         return $this->hasMany(ActualLoad::class, 'discipline_id');
     }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
 }

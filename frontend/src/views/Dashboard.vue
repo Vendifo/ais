@@ -5,15 +5,30 @@
       <div class="container-fluid">
         <a class="navbar-brand fw-bold fs-4" href="#">Мое приложение</a>
         <div class="d-flex align-items-center">
+          <!-- Админские ссылки -->
+          <template v-if="roles.includes('admin')">
+            <router-link to="/admin/users" class="btn btn-outline-secondary btn-sm me-2">👥 Пользователи</router-link>
+            <router-link to="/admin/departments" class="btn btn-outline-secondary btn-sm me-2">🏢 Кафедры</router-link>
+            <router-link to="/admin/disciplines" class="btn btn-outline-secondary btn-sm me-2">📘
+              Дисциплины</router-link>
+            <router-link to="/admin/groups" class="btn btn-outline-secondary btn-sm me-2">🎓 Группы</router-link>
+          </template>
+          <template v-if="roles.includes('admin') || roles.includes('methodist')">
+  <router-link to="/loads/planned" class="btn btn-outline-secondary btn-sm me-2">🧾 Плановая нагрузка</router-link>
+</template>
+
+
+          <!-- Приветствие и выход -->
           <span class="me-3 text-muted fst-italic">Добро пожаловать, {{ user?.name || 'Гость' }}</span>
           <button @click="logout" class="btn btn-outline-danger btn-sm">Выйти</button>
         </div>
+
       </div>
     </header>
 
     <!-- Основной контент -->
     <div class="container-fluid px-4 py-5">
-     
+
       <!-- Лоадер -->
       <div v-if="loading" class="d-flex justify-content-center my-5">
         <div class="spinner-border text-primary" role="status">

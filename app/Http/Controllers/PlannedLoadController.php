@@ -6,47 +6,86 @@ use App\Models\PlannedLoad;
 use Illuminate\Http\Request;
 use App\Rules\TeacherExists;
 
-
 class PlannedLoadController extends Controller
 {
-    public function index() {
-        return PlannedLoad::with(['teacher', 'discipline', 'group'])->get();
+    public function index()
+    {
+        return PlannedLoad::with([
+            'teacher.department',
+            'discipline',
+            'group',
+            'department',
+        ])->get();
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $data = $request->validate([
             'teacher_id' => ['required', 'integer', new TeacherExists],
             'discipline_id' => 'required|exists:disciplines,id',
             'group_id' => 'required|exists:groups,id',
-            'type' => 'required|string',
+            'department_id' => 'required|exists:departments,id',
+            'type' => 'required|string|max:255',
             'hours' => 'required|integer|min:1',
-            'semester' => 'required|string',
+            'semester' => 'required|string|max:50',
             'year' => 'required|integer',
         ]);
-    
+
         $data['created_by'] = auth()->id();
-    
-        return PlannedLoad::create($data);
-    }
 
-    public function show(PlannedLoad $plannedLoad) {
-        return $plannedLoad->load(['teacher', 'discipline', 'group']);
-    }
+        $plannedLoad = PlannedLoad::create($data);
 
-    public function update(Request $request, PlannedLoad $plannedLoad) {
-        $data = $request->validate([
-            'type' => 'string',
-            'hours' => 'integer|min:1',
-            'semester' => 'string',
-            'year' => 'integer',
+        return $plannedLoad->load([
+            'teacher.department',
+            'discipline',
+            'group',
+            'department',
         ]);
-
-        $plannedLoad->update($data);
-        return $plannedLoad;
     }
 
-    public function destroy(PlannedLoad $plannedLoad) {
+    public function show($id)
+    {
+        $plannedLoad = PlannedLoad::with([
+            'teacher.department',
+            'discipline',
+            'group',
+            'department',
+        ])->findOrFail($id);
+
+        return response()->json($plannedLoad);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'teacher_id' => ['sometimes', 'integer', new TeacherExists],
+            'discipline_id' => 'sometimes|integer|exists:disciplines,id',
+            'group_id' => 'sometimes|integer|exists:groups,id',
+            'department_id' => 'sometimes|integer|exists:departments,id',
+            'type' => 'sometimes|string|max:255',
+            'hours' => 'sometimes|integer|min:1',
+            'semester' => 'sometimes|string|max:50',
+            'year' => 'sometimes|integer',
+        ]);
+    
+        $plannedLoad = PlannedLoad::findOrFail($id);
+        $plannedLoad->update($data);
+    
+        $plannedLoad = PlannedLoad::with([
+            'teacher.department',
+            'discipline',
+            'group',
+            'department',
+        ])->findOrFail($id);
+    
+        return response()->json($plannedLoad);
+    }
+    
+
+    public function destroy(PlannedLoad $plannedLoad)
+    {
         $plannedLoad->delete();
+
         return response()->noContent();
     }
 }

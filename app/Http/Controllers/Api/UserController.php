@@ -51,7 +51,7 @@ class UserController extends Controller
 
         $data = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'email' => ['sometimes','required','email', Rule::unique('users')->ignore($user->id)],
+            'email' => ['sometimes', 'required', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'sometimes|nullable|string|min:6',
             'department_id' => 'nullable|exists:departments,id',
             'roles' => 'array',
@@ -81,4 +81,14 @@ class UserController extends Controller
 
         return response()->json(null, 204);
     }
+    public function getTeachers()
+    {
+        $teachers = User::whereHas('roles', function ($query) {
+            $query->where('name', 'teacher');
+        })->with('department:id,name')  // подгружаем кафедру, только id и name
+            ->get(['id', 'name', 'department_id']); // выбираем department_id для связи
+
+        return response()->json($teachers);
+    }
+
 }
