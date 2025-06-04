@@ -53,7 +53,14 @@ const routes = [
     name: 'PlannedLoads',
     component: () => import('@/views/AdminPlannedLoads.vue'),
     meta: { roles: ['admin', 'methodist'] }
+  },
+  {
+    path: '/loads/actual',
+    name: 'ActualLoads',
+    component: () => import('@/views/ActualLoadPage.vue'),
+    meta: { roles: ['admin', 'teacher'], requiresAuth: true }
   }
+  
   
 ]
 

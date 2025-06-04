@@ -19,10 +19,6 @@
 
               <button type="submit" class="btn btn-primary w-100">Войти</button>
             </form>
-
-            <div class="text-center mt-3">
-              <router-link to="/register">Нет аккаунта? Зарегистрируйтесь</router-link>
-            </div>
           </div>
         </div>
       </div>

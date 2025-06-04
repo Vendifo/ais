@@ -9,20 +9,20 @@
           <template v-if="roles.includes('admin')">
             <router-link to="/admin/users" class="btn btn-outline-secondary btn-sm me-2">👥 Пользователи</router-link>
             <router-link to="/admin/departments" class="btn btn-outline-secondary btn-sm me-2">🏢 Кафедры</router-link>
-            <router-link to="/admin/disciplines" class="btn btn-outline-secondary btn-sm me-2">📘
-              Дисциплины</router-link>
+            <router-link to="/admin/disciplines" class="btn btn-outline-secondary btn-sm me-2">📘 Дисциплины</router-link>
             <router-link to="/admin/groups" class="btn btn-outline-secondary btn-sm me-2">🎓 Группы</router-link>
           </template>
           <template v-if="roles.includes('admin') || roles.includes('methodist')">
-  <router-link to="/loads/planned" class="btn btn-outline-secondary btn-sm me-2">🧾 Плановая нагрузка</router-link>
-</template>
-
+            <router-link to="/loads/planned" class="btn btn-outline-secondary btn-sm me-2">🧾 Плановая нагрузка</router-link>
+          </template>
+          <template v-if="roles.includes('admin') || roles.includes('teacher')">
+            <router-link to="/loads/actual" class="btn btn-outline-secondary btn-sm me-2">📊 Фактическая нагрузка</router-link>
+          </template>
 
           <!-- Приветствие и выход -->
           <span class="me-3 text-muted fst-italic">Добро пожаловать, {{ user?.name || 'Гость' }}</span>
           <button @click="logout" class="btn btn-outline-danger btn-sm">Выйти</button>
         </div>
-
       </div>
     </header>
 
@@ -36,23 +36,29 @@
         </div>
       </div>
 
-      <!-- Блоки отчетов -->
+      <!-- Контент -->
       <div v-else>
+        <!-- Кнопки переключения аналитики -->
+        <div class="mb-4">
+          <button
+            v-for="tab in tabs"
+            :key="tab.key"
+            class="btn btn-outline-primary btn-sm me-2"
+            :class="{ active: activeTab === tab.key }"
+            @click="activeTab = tab.key"
+          >
+            {{ tab.label }}
+          </button>
+        </div>
+
+        <!-- Отображение выбранной аналитики -->
         <div class="row g-4">
-          <div class="col-md-6">
-            <CompareLoads />
-          </div>
-          <div class="col-md-6">
-            <ReportWorkloadsTeachers />
-          </div>
-          <div class="col-md-6">
-            <ReportWorkloadsDisciplines />
-          </div>
-          <div class="col-md-6">
-            <ReportWorkloadsDepartments />
-          </div>
-          <div class="col-md-6">
-            <ReportWorkloadsTypes />
+          <div class="col-12">
+            <CompareLoads v-if="activeTab === 'compare'" />
+            <ReportWorkloadsTeachers v-if="activeTab === 'teachers'" />
+            <ReportWorkloadsDisciplines v-if="activeTab === 'disciplines'" />
+            <ReportWorkloadsDepartments v-if="activeTab === 'departments'" />
+            <ReportWorkloadsTypes v-if="activeTab === 'types'" />
           </div>
         </div>
 
@@ -95,6 +101,14 @@ export default {
       user: null,
       roles: [],
       loading: true,
+      activeTab: 'compare',
+      tabs: [
+        { key: 'compare', label: 'Сравнение нагрузки' },
+        { key: 'teachers', label: 'По преподавателям' },
+        { key: 'disciplines', label: 'По дисциплинам' },
+        { key: 'departments', label: 'По кафедрам' },
+        { key: 'types', label: 'По типам работ' },
+      ],
     }
   },
   methods: {
@@ -127,5 +141,11 @@ export default {
 
 .card-header {
   font-size: 1rem;
+}
+
+/* Подсветка активной кнопки */
+.btn.active {
+  background-color: #0d6efd;
+  color: white;
 }
 </style>

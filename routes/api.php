@@ -10,7 +10,7 @@ use App\Http\Controllers\ActualLoadController;
 use App\Http\Controllers\LoadComparisonController;
 use App\Http\Controllers\ReportController;
 
-// 🔐 Аутентификация
+// Аутентификация
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
@@ -23,7 +23,7 @@ Route::middleware('auth.api')->get('/user', function (Request $request) {
 });
 
 
-// 👑 Админка
+// Админка
 Route::middleware(['auth.api', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index']);
 
@@ -35,17 +35,17 @@ Route::middleware(['auth.api', 'role:admin'])->prefix('admin')->group(function (
     Route::apiResource('roles', \App\Http\Controllers\Api\RoleController::class);
 });
 
-// 🧾 Плановая нагрузка (методист + админ)
+// Плановая нагрузка (методист + админ)
 Route::middleware(['auth.api', 'role:methodist|admin'])->prefix('loads')->group(function () {
     Route::apiResource('planned', PlannedLoadController::class);
 });
 
-// 👨‍🏫 Фактическая нагрузка (преподаватель + админ)
+// Фактическая нагрузка (преподаватель + админ)
 Route::middleware(['auth.api', 'role:teacher|admin'])->prefix('loads')->group(function () {
     Route::apiResource('actual', ActualLoadController::class);
 });
 
-// 📊 Общие отчёты (все авторизованные пользователи)
+// Общие отчёты (все авторизованные пользователи)
 Route::middleware('auth.api')->group(function () {
     Route::get('/loads/compare', [LoadComparisonController::class, 'index']);
 
@@ -58,3 +58,8 @@ Route::middleware('auth.api')->group(function () {
 });
 
 Route::middleware(['auth.api', 'role:admin|methodist'])->get('/admin/teachers', [\App\Http\Controllers\Api\UserController::class, 'getTeachers']);
+
+
+
+
+

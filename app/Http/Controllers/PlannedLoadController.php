@@ -89,3 +89,6 @@ class PlannedLoadController extends Controller
         return response()->noContent();
     }
 }
+
+
+
